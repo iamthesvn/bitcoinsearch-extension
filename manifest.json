@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Bitcoin Search",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Search bitcoin's technical ecosystem from anywhere in your browser.",
   "minimum_chrome_version": "111",
   "permissions": ["activeTab", "scripting", "storage", "windows"],
