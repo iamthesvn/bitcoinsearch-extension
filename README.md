@@ -37,24 +37,6 @@ npm run lint
 npm run pack
 ```
 
-## Project structure
-
-```
-.
-├── manifest.json          # Extension manifest (Manifest V3)
-├── background.js          # Service worker: API calls, omnibox, keyboard shortcut, popup fallback
-├── shared.js              # Shared utilities, DOM helpers, and theme handling
-├── shared.css             # Common styles for the popup and popup window
-├── content.js             # Floating overlay injected into pages
-├── content.css            # Minimal overlay host styles
-├── popup.html/.css/.js    # Toolbar popup
-├── window.html/.css/.js   # Centered fallback popup window
-├── icons/                 # Extension icons
-├── eslint.config.mjs      # ESLint flat config
-├── .prettierrc.json       # Prettier config
-└── package.json           # Dev tooling scripts
-```
-
 ## Permissions
 
 - `activeTab` — accesses the current page when you press the shortcut so the overlay can be injected.
