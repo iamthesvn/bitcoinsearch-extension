@@ -11,8 +11,9 @@
       <header class="bs-window-header">
         <div class="bs-logo">
           <svg
-            width="28"
-            height="28"
+            class="bs-logo-icon"
+            width="32"
+            height="32"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -23,10 +24,7 @@
               fill="#171923"
             />
           </svg>
-          <div class="bs-logo-text">
-            <span class="bs-logo-title">Bitcoin Search</span>
-            <span class="bs-logo-subtitle">Search bitcoin's technical ecosystem</span>
-          </div>
+          <span class="bs-logo-text">bitcoin search</span>
         </div>
         <button class="bs-close" aria-label="Close window">×</button>
       </header>
@@ -40,6 +38,21 @@
             autocomplete="off"
             autofocus
           />
+          <button class="bs-search-btn" type="button" aria-label="Search">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </button>
         </div>
         <div class="bs-results"></div>
       </main>

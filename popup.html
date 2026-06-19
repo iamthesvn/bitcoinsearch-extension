@@ -8,11 +8,12 @@
   </head>
   <body>
     <div class="bs-app">
-      <div class="bs-header">
+      <header class="bs-header">
         <div class="bs-logo">
           <svg
-            width="22"
-            height="22"
+            class="bs-logo-icon"
+            width="28"
+            height="28"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -23,22 +24,43 @@
               fill="#171923"
             />
           </svg>
-          <span>Bitcoin Search</span>
+          <span class="bs-logo-text">bitcoin search</span>
         </div>
-      </div>
-      <input
-        class="bs-input"
-        type="text"
-        placeholder="Search bitcoin's technical ecosystem…"
-        autocomplete="off"
-        autofocus
-      />
-      <div class="bs-results"></div>
-      <div class="bs-footer">
+      </header>
+
+      <main class="bs-body">
+        <div class="bs-search-box">
+          <input
+            class="bs-input"
+            type="text"
+            placeholder="Search bitcoin's technical ecosystem…"
+            autocomplete="off"
+            autofocus
+          />
+          <button class="bs-search-btn" type="button" aria-label="Search">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </button>
+        </div>
+        <div class="bs-results"></div>
+      </main>
+
+      <footer class="bs-footer">
         <a href="https://bitcoinsearch.xyz/" target="_blank" rel="noopener noreferrer"
           >Open bitcoinsearch.xyz ↗</a
         >
-      </div>
+      </footer>
     </div>
     <script src="shared.js"></script>
     <script src="popup.js"></script>

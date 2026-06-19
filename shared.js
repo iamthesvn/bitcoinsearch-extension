@@ -6,7 +6,8 @@
     SEARCH_PAGE_ORIGIN: 'https://bitcoinsearch.xyz',
     SEARCH_PARAM: 'search',
     DEFAULT_RESULT_SIZE: 6,
-    DEBOUNCE_MS: 200
+    DEBOUNCE_MS: 200,
+    SNIPPET_MAX_LENGTH: 160
   };
 
   /**
@@ -31,6 +32,70 @@
       return new URL(url).hostname;
     } catch {
       return url;
+    }
+  }
+
+  /**
+   * Strip HTML tags and decode entities to plain text.
+   * @param {string} html
+   * @returns {string}
+   */
+  function stripHtml(html) {
+    if (!html) {
+      return '';
+    }
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  }
+
+  /**
+   * Truncate a string to a maximum length with an ellipsis.
+   * @param {string} str
+   * @param {number} maxLength
+   * @returns {string}
+   */
+  function truncate(str, maxLength) {
+    if (!str || str.length <= maxLength) {
+      return str || '';
+    }
+    return str.slice(0, maxLength).trimEnd() + '…';
+  }
+
+  /**
+   * Format an ISO date string as a human-readable date.
+   * @param {string} isoString
+   * @returns {string}
+   */
+  function formatDate(isoString) {
+    if (!isoString) {
+      return '';
+    }
+    const date = new Date(isoString);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
+  /**
+   * Extract a clean domain name from a URL or domain string.
+   * @param {string} domainOrUrl
+   * @returns {string}
+   */
+  function getDomainName(domainOrUrl) {
+    const value = String(domainOrUrl || '');
+    try {
+      return new URL(value).hostname.replace(/^www\./, '');
+    } catch {
+      return value
+        .replace(/^https?:\/\//, '')
+        .replace(/^www\./, '')
+        .split('/')[0];
     }
   }
 
@@ -85,15 +150,45 @@
   }
 
   /**
+   * Create a small globe icon element.
+   * @returns {SVGSVGElement}
+   */
+  function createGlobeIcon() {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '12');
+    svg.setAttribute('height', '12');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute(
+      'd',
+      'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 0 1 0-16 8 8 0 0 1 0 16zm0-14a6 6 0 0 0-5.66 4h11.32A6 6 0 0 0 12 6zm0 12a6 6 0 0 0 5.66-4H6.34A6 6 0 0 0 12 18z'
+    );
+
+    svg.appendChild(path);
+    return svg;
+  }
+
+  /**
    * Create a single search result DOM element.
    * @param {object} hit
+   * @param {object} [options]
    * @returns {HTMLAnchorElement}
    */
-  function createResultElement(hit) {
+  function createResultElement(hit, options = {}) {
     const source = hit?._source || {};
     const url = source.url;
     const title = source.title || 'Untitled';
-    const domain = source.domain || getHostname(url);
+    const domain = source.domain || url;
+    const snippetHtml = source.body_formatted || source.body || '';
+    const snippet = truncate(stripHtml(snippetHtml), CONFIG.SNIPPET_MAX_LENGTH);
+    const date = formatDate(source.created_at);
+    const author = source.authors?.[0];
 
     const anchor = document.createElement('a');
     anchor.className = 'bs-result';
@@ -101,15 +196,42 @@
     anchor.target = '_blank';
     anchor.rel = 'noopener noreferrer';
 
+    if (options.onNavigate) {
+      anchor.addEventListener('click', options.onNavigate);
+    }
+
+    const sourceEl = document.createElement('div');
+    sourceEl.className = 'bs-result-source';
+    sourceEl.appendChild(createGlobeIcon());
+    const sourceText = document.createElement('span');
+    sourceText.textContent = getDomainName(domain);
+    sourceEl.appendChild(sourceText);
+    anchor.appendChild(sourceEl);
+
     const titleEl = document.createElement('div');
     titleEl.className = 'bs-result-title';
     titleEl.textContent = title;
     anchor.appendChild(titleEl);
 
-    if (domain) {
+    if (snippet) {
+      const snippetEl = document.createElement('div');
+      snippetEl.className = 'bs-result-snippet';
+      snippetEl.textContent = snippet;
+      anchor.appendChild(snippetEl);
+    }
+
+    const metaParts = [];
+    if (date) {
+      metaParts.push(date);
+    }
+    if (author) {
+      metaParts.push(author);
+    }
+
+    if (metaParts.length) {
       const metaEl = document.createElement('div');
       metaEl.className = 'bs-result-meta';
-      metaEl.textContent = domain;
+      metaEl.textContent = metaParts.join(' · ');
       anchor.appendChild(metaEl);
     }
 
@@ -134,8 +256,9 @@
    * Render search hits into a container using safe DOM construction.
    * @param {HTMLElement} container
    * @param {Array} hits
+   * @param {object} [options]
    */
-  function renderResults(container, hits) {
+  function renderResults(container, hits, options = {}) {
     container.innerHTML = '';
 
     if (!hits?.length) {
@@ -145,7 +268,7 @@
 
     const fragment = document.createDocumentFragment();
     for (const hit of hits) {
-      fragment.appendChild(createResultElement(hit));
+      fragment.appendChild(createResultElement(hit, options));
     }
     container.appendChild(fragment);
   }
@@ -170,7 +293,7 @@
 
       try {
         const hits = await searchExtension(query, size);
-        renderResults(resultsContainer, hits);
+        renderResults(resultsContainer, hits, options);
       } catch {
         setStatus(resultsContainer, 'error', 'Search failed. Please try again.');
       }
@@ -189,6 +312,9 @@
       if (event.key === 'Enter' && input.value.trim()) {
         event.preventDefault();
         window.open(buildSearchUrl(input.value.trim()), '_blank');
+        if (options.onNavigate) {
+          options.onNavigate();
+        }
       }
     });
   }

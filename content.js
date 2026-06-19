@@ -8,8 +8,22 @@
   window.__bitcoinSearchInitialized = true;
 
   const OVERLAY_ID = 'bitcoinsearch-overlay';
-  const BRAND_ORANGE = '#f7931a';
-  const BRAND_DARK = '#171923';
+
+  const COLORS = {
+    bg: '#fafafa',
+    surface: '#ffffff',
+    cream: '#f6f0e6',
+    border: '#e5e7eb',
+    text: '#292929',
+    muted: '#636366',
+    placeholder: '#999999',
+    orange: '#f7931a',
+    orangeDark: '#e8782b',
+    orangeLight: '#f6a73f',
+    error: '#dc2626',
+    hover: '#fff0e0',
+    gradient: 'linear-gradient(92.78deg, #e8782b, #f6a73f 101.1%)'
+  };
 
   let overlay = null;
   let shadowRoot = null;
@@ -45,7 +59,7 @@
         position: fixed;
         inset: 0;
         z-index: 2147483647;
-        background: rgba(0, 0, 0, 0.72);
+        background: rgba(0, 0, 0, 0.45);
         backdrop-filter: blur(4px);
       }
       .bs-modal {
@@ -54,11 +68,11 @@
         left: 50%;
         transform: translateX(-50%);
         z-index: 2147483647;
-        width: min(640px, 92vw);
-        background: ${BRAND_DARK};
-        border: 1px solid #2d3748;
+        width: min(680px, 92vw);
+        background: ${COLORS.bg};
+        border: 1px solid ${COLORS.border};
         border-radius: 16px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -68,105 +82,173 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 16px 20px;
-        border-bottom: 1px solid #2d3748;
+        padding: 14px 20px;
+        background: ${COLORS.cream};
+        border-bottom: 1px solid ${COLORS.border};
       }
       .bs-logo {
         display: flex;
         align-items: center;
         gap: 10px;
-        color: #ffffff;
-        font-weight: 700;
-        font-size: 16px;
-        letter-spacing: -0.01em;
       }
       .bs-logo svg {
         flex-shrink: 0;
       }
+      .bs-logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        font-style: italic;
+        letter-spacing: -0.02em;
+        background: ${COLORS.gradient};
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
       .bs-close {
         background: transparent;
         border: none;
-        color: #a0aec0;
-        font-size: 24px;
+        color: ${COLORS.muted};
+        font-size: 26px;
         line-height: 1;
         cursor: pointer;
-        padding: 4px 8px;
+        padding: 4px 10px;
         border-radius: 8px;
         transition: background 0.15s, color 0.15s;
       }
       .bs-close:hover,
       .bs-close:focus {
-        background: #2d3748;
-        color: #ffffff;
+        background: ${COLORS.hover};
+        color: ${COLORS.text};
         outline: none;
+      }
+      .bs-search-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 16px 20px;
+        border-bottom: 1px solid ${COLORS.border};
       }
       .bs-input {
         width: 100%;
-        padding: 18px 20px;
-        font-size: 17px;
-        color: #ffffff;
-        background: #1a202c;
-        border: none;
-        border-bottom: 1px solid #2d3748;
+        padding: 14px 50px 14px 18px;
+        font-size: 16px;
+        color: ${COLORS.text};
+        background: ${COLORS.surface};
+        border: 1px solid ${COLORS.border};
+        border-radius: 12px;
         outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
       }
       .bs-input::placeholder {
-        color: #718096;
+        color: ${COLORS.placeholder};
       }
       .bs-input:focus {
-        box-shadow: inset 0 -2px 0 0 ${BRAND_ORANGE};
+        border-color: ${COLORS.orange};
+        box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.15);
+      }
+      .bs-search-btn {
+        position: absolute;
+        right: 26px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: ${COLORS.gradient};
+        border: none;
+        border-radius: 10px;
+        color: #ffffff;
+        cursor: pointer;
+        transition: opacity 0.15s, transform 0.1s;
+      }
+      .bs-search-btn:hover,
+      .bs-search-btn:focus {
+        opacity: 0.92;
+        outline: none;
+      }
+      .bs-search-btn:active {
+        transform: translateY(-50%) scale(0.96);
       }
       .bs-results {
         overflow-y: auto;
-        padding: 8px 0;
+        padding: 12px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
       }
       .bs-loading,
       .bs-empty,
       .bs-error {
         padding: 28px 20px;
         text-align: center;
-        color: #a0aec0;
+        color: ${COLORS.muted};
         font-size: 14px;
       }
       .bs-error {
-        color: #fc8181;
+        color: ${COLORS.error};
       }
       .bs-result {
         display: block;
-        padding: 14px 20px;
+        padding: 14px;
         text-decoration: none;
-        border-left: 3px solid transparent;
-        transition: background 0.12s, border-color 0.12s;
+        background: ${COLORS.surface};
+        border: 1px solid ${COLORS.border};
+        border-radius: 12px;
+        transition: border-color 0.12s, background 0.12s, transform 0.08s;
       }
       .bs-result:hover,
       .bs-result:focus,
       .bs-result.active {
-        background: #1a202c;
-        border-left-color: ${BRAND_ORANGE};
+        border-color: ${COLORS.orange};
+        background: ${COLORS.hover};
         outline: none;
+        transform: translateY(-1px);
       }
-      .bs-result-title {
-        color: #ffffff;
-        font-size: 15px;
-        font-weight: 600;
-        line-height: 1.35;
-        margin-bottom: 4px;
-      }
-      .bs-result-meta {
-        color: ${BRAND_ORANGE};
+      .bs-result-source {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: ${COLORS.muted};
         font-size: 12px;
         font-weight: 500;
+        margin-bottom: 6px;
+      }
+      .bs-result-title {
+        color: ${COLORS.text};
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.35;
+        margin-bottom: 6px;
+      }
+      .bs-result-snippet {
+        color: ${COLORS.muted};
+        font-size: 13px;
+        line-height: 1.45;
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .bs-result-meta {
+        color: ${COLORS.orangeDark};
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
       }
       .bs-footer {
         padding: 12px 20px;
-        border-top: 1px solid #2d3748;
-        color: #718096;
+        border-top: 1px solid ${COLORS.border};
+        color: ${COLORS.muted};
         font-size: 12px;
         text-align: center;
       }
       .bs-footer kbd {
-        background: #2d3748;
-        color: #e2e8f0;
+        background: ${COLORS.hover};
+        color: ${COLORS.text};
         padding: 2px 6px;
         border-radius: 4px;
         font-family: inherit;
@@ -178,8 +260,8 @@
 
   function createLogoSvg() {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', '26');
-    svg.setAttribute('height', '26');
+    svg.setAttribute('width', '28');
+    svg.setAttribute('height', '28');
     svg.setAttribute('viewBox', '0 0 24 24');
     svg.setAttribute('fill', 'none');
 
@@ -198,6 +280,30 @@
 
     svg.appendChild(circle);
     svg.appendChild(path);
+    return svg;
+  }
+
+  function createSearchIconSvg() {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '20');
+    svg.setAttribute('height', '20');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2.5');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', '11');
+    circle.setAttribute('cy', '11');
+    circle.setAttribute('r', '8');
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    line.setAttribute('d', 'm21 21-4.35-4.35');
+
+    svg.appendChild(circle);
+    svg.appendChild(line);
     return svg;
   }
 
@@ -233,7 +339,8 @@
     logo.className = 'bs-logo';
     logo.appendChild(createLogoSvg());
     const logoText = document.createElement('span');
-    logoText.textContent = 'Bitcoin Search';
+    logoText.className = 'bs-logo-text';
+    logoText.textContent = 'bitcoin search';
     logo.appendChild(logoText);
 
     const closeBtn = document.createElement('button');
@@ -244,11 +351,23 @@
     header.appendChild(logo);
     header.appendChild(closeBtn);
 
+    const searchBox = document.createElement('div');
+    searchBox.className = 'bs-search-box';
+
     const input = document.createElement('input');
     input.className = 'bs-input';
     input.type = 'text';
     input.placeholder = "Search bitcoin's technical ecosystem…";
     input.autocomplete = 'off';
+
+    const searchBtn = document.createElement('button');
+    searchBtn.className = 'bs-search-btn';
+    searchBtn.type = 'button';
+    searchBtn.setAttribute('aria-label', 'Search');
+    searchBtn.appendChild(createSearchIconSvg());
+
+    searchBox.appendChild(input);
+    searchBox.appendChild(searchBtn);
 
     const results = document.createElement('div');
     results.className = 'bs-results';
@@ -260,7 +379,7 @@
       '<span>Press <kbd>Enter</kbd> to search on bitcoinsearch.xyz · <kbd>Esc</kbd> to close · <kbd>↑</kbd><kbd>↓</kbd> to navigate</span>';
 
     modal.appendChild(header);
-    modal.appendChild(input);
+    modal.appendChild(searchBox);
     modal.appendChild(results);
     modal.appendChild(footer);
 
@@ -275,13 +394,17 @@
     closeBtn.addEventListener('click', hideOverlay);
     backdrop.addEventListener('click', hideOverlay);
 
-    bindOverlaySearch(input, results);
-
-    results.addEventListener('click', (event) => {
-      if (event.target.closest('.bs-result')) {
-        hideOverlay();
+    searchBtn.addEventListener('click', () => {
+      const query = input.value.trim();
+      if (!query) {
+        input.focus();
+        return;
       }
+      window.open(BitcoinSearch.buildSearchUrl(query), '_blank');
+      hideOverlay();
     });
+
+    bindOverlaySearch(input, results);
 
     return overlay;
   }
@@ -342,7 +465,7 @@
       BitcoinSearch.setStatus(resultsEl, 'loading', 'Searching…');
       try {
         const hits = await BitcoinSearch.searchExtension(query, 6);
-        BitcoinSearch.renderResults(resultsEl, hits);
+        BitcoinSearch.renderResults(resultsEl, hits, { onNavigate: hideOverlay });
       } catch {
         BitcoinSearch.setStatus(resultsEl, 'error', 'Search failed. Please try again.');
       }
