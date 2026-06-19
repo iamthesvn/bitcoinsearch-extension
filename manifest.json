@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Bitcoin Search",
+  "version": "1.2.1",
+  "description": "Search bitcoin's technical ecosystem from anywhere in your browser.",
+  "minimum_chrome_version": "111",
+  "permissions": ["activeTab", "scripting", "windows"],
+  "host_permissions": ["https://bitcoinsearch.xyz/*", "<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "omnibox": {
+    "keyword": "btc"
+  },
+  "commands": {
+    "toggle-bitcoin-search": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "Command+Shift+K"
+      },
+      "description": "Toggle Bitcoin Search overlay"
+    }
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["shared.js", "content.js"],
+      "css": ["content.css"],
+      "run_at": "document_end"
+    }
+  ]
+}

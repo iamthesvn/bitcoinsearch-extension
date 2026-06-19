@@ -1,0 +1,139 @@
+:root {
+  --bs-bg: #171923;
+  --bs-surface: #1a202c;
+  --bs-border: #2d3748;
+  --bs-text: #ffffff;
+  --bs-muted: #a0aec0;
+  --bs-placeholder: #718096;
+  --bs-orange: #f7931a;
+  --bs-error: #fc8181;
+  --bs-radius: 16px;
+  --bs-font:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--bs-font);
+}
+
+body {
+  width: 380px;
+  background: var(--bs-bg);
+  color: var(--bs-text);
+}
+
+.bs-app {
+  display: flex;
+  flex-direction: column;
+  max-height: 560px;
+}
+
+.bs-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--bs-border);
+}
+
+.bs-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+.bs-input {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: var(--bs-text);
+  background: var(--bs-surface);
+  border: none;
+  border-bottom: 1px solid var(--bs-border);
+  outline: none;
+}
+
+.bs-input::placeholder {
+  color: var(--bs-placeholder);
+}
+
+.bs-input:focus {
+  box-shadow: inset 0 -2px 0 0 var(--bs-orange);
+}
+
+.bs-results {
+  overflow-y: auto;
+  max-height: 360px;
+  padding: 6px 0;
+}
+
+.bs-loading,
+.bs-empty,
+.bs-error {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--bs-muted);
+  font-size: 13px;
+}
+
+.bs-error {
+  color: var(--bs-error);
+}
+
+.bs-result {
+  display: block;
+  padding: 12px 16px;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+}
+
+.bs-result:hover,
+.bs-result:focus,
+.bs-result.active {
+  background: var(--bs-surface);
+  border-left-color: var(--bs-orange);
+  outline: none;
+}
+
+.bs-result-title {
+  color: var(--bs-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.bs-result-meta {
+  color: var(--bs-orange);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.bs-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--bs-border);
+  text-align: center;
+}
+
+.bs-footer a {
+  color: var(--bs-muted);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.bs-footer a:hover,
+.bs-footer a:focus {
+  color: var(--bs-orange);
+  outline: none;
+}

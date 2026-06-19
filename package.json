@@ -1,0 +1,33 @@
+{
+  "name": "bitcoinsearch-extension",
+  "version": "1.2.1",
+  "description": "Search bitcoin's technical ecosystem from anywhere in your browser.",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,css,html,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,css,html,json,md}\"",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "pack": "zip -r bitcoinsearch-extension.zip . -x 'node_modules/*' 'package*.json' '.prettierrc.json' 'eslint.config.mjs' '.gitignore' '*.zip' '.git/*' '.DS_Store'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thesvn/bitcoinsearch-extension.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "search",
+    "browser-extension",
+    "chrome-extension",
+    "manifest-v3",
+    "bitcoinsearch"
+  ],
+  "author": "Bitcoin Search Extension contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "eslint": "^9.21.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3"
+  }
+}
