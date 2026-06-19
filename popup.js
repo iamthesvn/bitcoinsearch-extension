@@ -4,10 +4,14 @@
   const input = document.querySelector('.bs-input');
   const results = document.querySelector('.bs-results');
   const searchBtn = document.querySelector('.bs-search-btn');
+  const themeToggle = document.querySelector('.bs-theme-toggle');
 
   if (!input || !results) {
     return;
   }
+
+  BitcoinSearch.initTheme(document.documentElement);
+  BitcoinSearch.attachThemeToggle(themeToggle, document.documentElement);
 
   function navigateToSearch() {
     const query = input.value.trim();

@@ -4,7 +4,7 @@
   "version": "1.2.1",
   "description": "Search bitcoin's technical ecosystem from anywhere in your browser.",
   "minimum_chrome_version": "111",
-  "permissions": ["activeTab", "scripting", "windows"],
+  "permissions": ["activeTab", "scripting", "storage", "windows"],
   "host_permissions": ["https://bitcoinsearch.xyz/*", "<all_urls>"],
   "background": {
     "service_worker": "background.js"

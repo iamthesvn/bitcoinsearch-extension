@@ -1,6 +1,9 @@
 (function (global) {
   'use strict';
 
+  const THEME_STORAGE_KEY = 'bitcoinsearch-theme';
+  const DARK_CLASS = 'bs-dark';
+
   const CONFIG = {
     API_URL: 'https://bitcoinsearch.xyz/api/elasticSearchProxy/search',
     SEARCH_PAGE_ORIGIN: 'https://bitcoinsearch.xyz',
@@ -11,31 +14,6 @@
   };
 
   /**
-   * Escape HTML special characters to prevent XSS when inserting text.
-   * @param {string} str
-   * @returns {string}
-   */
-  function escapeHtml(str) {
-    return String(str).replace(
-      /[&<>"']/g,
-      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
-    );
-  }
-
-  /**
-   * Extract hostname from a URL, returning the raw URL on failure.
-   * @param {string} url
-   * @returns {string}
-   */
-  function getHostname(url) {
-    try {
-      return new URL(url).hostname;
-    } catch {
-      return url;
-    }
-  }
-
-  /**
    * Strip HTML tags and decode entities to plain text.
    * @param {string} html
    * @returns {string}
@@ -44,9 +22,18 @@
     if (!html) {
       return '';
     }
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(String(html), 'text/html');
+    return doc.body?.textContent || '';
+  }
+
+  /**
+   * Return true for http:// or https:// URLs.
+   * @param {string} url
+   * @returns {boolean}
+   */
+  function isHttpUrl(url) {
+    return typeof url === 'string' && /^https?:\/\//i.test(url);
   }
 
   /**
@@ -182,7 +169,7 @@
    */
   function createResultElement(hit, options = {}) {
     const source = hit?._source || {};
-    const url = source.url;
+    const url = isHttpUrl(source.url) ? source.url : '';
     const title = source.title || 'Untitled';
     const domain = source.domain || url;
     const snippetHtml = source.body_formatted || source.body || '';
@@ -193,10 +180,13 @@
     const anchor = document.createElement('a');
     anchor.className = 'bs-result';
     anchor.href = url || '#';
-    anchor.target = '_blank';
-    anchor.rel = 'noopener noreferrer';
 
-    if (options.onNavigate) {
+    if (url) {
+      anchor.target = '_blank';
+      anchor.rel = 'noopener noreferrer';
+    }
+
+    if (url && options.onNavigate) {
       anchor.addEventListener('click', options.onNavigate);
     }
 
@@ -274,6 +264,101 @@
   }
 
   /**
+   * Read the stored theme preference ('light' or 'dark').
+   * @returns {Promise<string>}
+   */
+  async function getStoredTheme() {
+    try {
+      const result = await chrome.storage.local.get(THEME_STORAGE_KEY);
+      return result[THEME_STORAGE_KEY] === 'dark' ? 'dark' : 'light';
+    } catch {
+      return 'light';
+    }
+  }
+
+  /**
+   * Persist the theme preference.
+   * @param {string} theme
+   * @returns {Promise<void>}
+   */
+  async function setStoredTheme(theme) {
+    try {
+      await chrome.storage.local.set({ [THEME_STORAGE_KEY]: theme });
+    } catch {
+      // Ignore storage failures.
+    }
+  }
+
+  /**
+   * Return true when the stored theme is dark.
+   * @returns {Promise<boolean>}
+   */
+  async function isDarkMode() {
+    return (await getStoredTheme()) === 'dark';
+  }
+
+  /**
+   * Toggle the stored theme and return the new value.
+   * @returns {Promise<string>}
+   */
+  async function toggleTheme() {
+    const newTheme = (await isDarkMode()) ? 'light' : 'dark';
+    await setStoredTheme(newTheme);
+    return newTheme;
+  }
+
+  /**
+   * Apply or remove the dark-mode class on a root element.
+   * @param {Element} root
+   * @param {boolean} isDark
+   */
+  function applyTheme(root, isDark) {
+    if (!root) {
+      return;
+    }
+    root.classList.toggle(DARK_CLASS, isDark);
+  }
+
+  /**
+   * Load the stored theme and apply it to a root element.
+   * @param {Element} root
+   * @returns {Promise<boolean>}
+   */
+  async function initTheme(root) {
+    const dark = await isDarkMode();
+    applyTheme(root, dark);
+    return dark;
+  }
+
+  /**
+   * Notify the background script that the theme changed.
+   * @param {string} theme
+   */
+  async function broadcastTheme(theme) {
+    try {
+      await chrome.runtime.sendMessage({ action: 'themeChanged', theme });
+    } catch {
+      // The background script may be unavailable; ignore.
+    }
+  }
+
+  /**
+   * Wire a dark-mode toggle button to the stored theme.
+   * @param {HTMLButtonElement} button
+   * @param {Element} root
+   */
+  function attachThemeToggle(button, root) {
+    if (!button) {
+      return;
+    }
+    button.addEventListener('click', async () => {
+      const theme = await toggleTheme();
+      applyTheme(root, theme === 'dark');
+      broadcastTheme(theme);
+    });
+  }
+
+  /**
    * Bind search behavior to an input and results container.
    * @param {HTMLInputElement} input
    * @param {HTMLElement} resultsContainer
@@ -321,14 +406,18 @@
 
   global.BitcoinSearch = {
     CONFIG,
-    escapeHtml,
-    getHostname,
     buildSearchUrl,
     debounce,
     searchExtension,
     createResultElement,
     renderResults,
     setStatus,
-    bindSearchInput
+    bindSearchInput,
+    isDarkMode,
+    toggleTheme,
+    applyTheme,
+    initTheme,
+    broadcastTheme,
+    attachThemeToggle
   };
 })(typeof window !== 'undefined' ? window : this);

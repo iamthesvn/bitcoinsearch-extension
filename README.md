@@ -3,40 +3,43 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](LICENSE)
 [![Code style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
 
-A production-ready browser extension that brings the [bitcoinsearch.xyz](https://bitcoinsearch.xyz/) search omnibox to every page of your browser.
+A small, fast browser extension that puts [bitcoinsearch.xyz](https://bitcoinsearch.xyz/) right where you need it — the address bar, a floating overlay, or the toolbar icon.
 
-## Features
+> **Disclaimer:** This is an independent, unofficial extension built by someone who wanted a quicker way to search bitcoin's technical ecosystem. It is not affiliated with, endorsed by, or maintained by the bitcoinsearch.xyz team.
 
-- **Address-bar search** — type `btc` followed by `Tab` in the Chrome/Edge/Brave address bar, enter your query, and jump straight to results.
-- **Floating overlay** — press `Ctrl+Shift+K` (`Cmd+Shift+K` on macOS) on any web page to open a Bitcoin Search overlay.
-- **Toolbar popup** — click the extension icon for a compact search popup.
-- **Popup fallback** — on pages where the overlay can't be injected (e.g. `chrome://newtab/`, Settings, Extensions), the shortcut opens the search UI in a centered popup window instead.
+## What it does
 
-## Installation
+- **Search from the address bar** — type `btc`, press `Tab`, enter your query, and go straight to the results.
+- **Floating overlay anywhere** — hit `Ctrl+Shift+K` (`Cmd+Shift+K` on a Mac) on any page to search without leaving the tab.
+- **Toolbar popup** — click the extension icon for a compact search view.
+- **Falls back gracefully** — on built-in pages like `chrome://newtab/`, Settings, or Extensions, the shortcut opens a centered popup window instead.
+- **Light or dark** — toggle themes from the popup or popup window. Your choice is saved and syncs to the overlay too.
 
-### Chrome / Edge / Brave (Manifest V3)
+## Install it locally
+
+Works in any Chromium browser that supports Manifest V3 (Chrome, Edge, Brave, etc.).
 
 1. Open `chrome://extensions/` (or `edge://extensions/`, `brave://extensions/`).
-2. Enable **Developer mode** (toggle in the top-right).
+2. Turn on **Developer mode** in the top-right corner.
 3. Click **Load unpacked**.
 4. Select the `bitcoinsearch-extension` folder.
-5. The extension is now installed.
+5. You're good to go.
 
-### Usage
+## How to use it
 
 - Type `btc <query>` in the address bar and press **Enter**.
 - Or press `Ctrl+Shift+K` / `Cmd+Shift+K` on any web page.
-- Or click the Bitcoin Search toolbar icon.
+- Or click the Bitcoin Search icon in your toolbar.
 
 ## Development
 
-This project uses [Node.js](https://nodejs.org/) only for development tooling. The extension itself has no build step.
+Node.js is only used for formatting and linting. The extension itself has no build step — just plain HTML, CSS, and JavaScript.
 
 ```bash
-# Install dependencies
+# Install dev tooling
 npm install
 
-# Format code
+# Format everything
 npm run format
 
 # Check formatting
@@ -45,7 +48,7 @@ npm run format:check
 # Lint JavaScript
 npm run lint
 
-# Package the extension for distribution
+# Create a distributable zip
 npm run pack
 ```
 
@@ -55,7 +58,8 @@ npm run pack
 .
 ├── manifest.json          # Extension manifest (Manifest V3)
 ├── background.js          # Service worker: API calls, omnibox, keyboard shortcut, popup fallback
-├── shared.js              # Shared utilities and safe DOM helpers
+├── shared.js              # Shared utilities, DOM helpers, and theme handling
+├── shared.css             # Common styles for the popup and popup window
 ├── content.js             # Floating overlay injected into pages
 ├── content.css            # Minimal overlay host styles
 ├── popup.html/.css/.js    # Toolbar popup
@@ -68,15 +72,18 @@ npm run pack
 
 ## Permissions
 
-- `activeTab` — to inject the floating overlay into the current page when you press the shortcut.
-- `scripting` — to inject the overlay content script on demand.
-- `windows` — to open the popup-window fallback centered on your current window.
-- `https://bitcoinsearch.xyz/*` — to call the public bitcoinsearch.xyz search API.
-- `<all_urls>` (host permission) — so the manifest-declared content script can run on any web page. If you decline this, the shortcut will still try to work via dynamic injection using `activeTab`, and will fall back to the popup window if that fails.
+Here's exactly what each permission is for:
+
+- `activeTab` — temporarily accesses the current page so the overlay can be injected when you press the shortcut.
+- `scripting` — injects the overlay content script on demand.
+- `storage` — saves your dark-mode preference locally.
+- `windows` — opens the popup-window fallback centered on your current window.
+- `https://bitcoinsearch.xyz/*` — calls the public bitcoinsearch.xyz search API.
+- `<all_urls>` — lets the overlay run on any web page. If you decline this, the shortcut will still try dynamic injection using `activeTab`, and fall back to the popup window if that fails.
 
 ## Search API
 
-The extension calls the public bitcoinsearch.xyz endpoint:
+The extension talks to the public bitcoinsearch.xyz endpoint:
 
 ```http
 POST https://bitcoinsearch.xyz/api/elasticSearchProxy/search
@@ -91,19 +98,19 @@ Content-Type: application/json
 
 ## Troubleshooting
 
-### Shortcut does nothing
+### The shortcut does nothing
 
-1. Go to `chrome://extensions/shortcuts` and make sure **Bitcoin Search** has a shortcut assigned.
-2. Reload the extension from `chrome://extensions/`.
+1. Visit `chrome://extensions/shortcuts` and make sure **Bitcoin Search** has a shortcut assigned.
+2. Try reloading the extension from `chrome://extensions/`.
 
-### Overlay never appears, only the popup window
+### The overlay never appears, only the popup window
 
-The overlay needs permission to run on the active page. The first time you press the shortcut, Chrome may prompt you to allow the extension on all sites — accept it.
+The overlay needs permission to run on the page you're visiting. The first time you use the shortcut, Chrome may ask you to allow the extension on all sites — accepting it will let the overlay appear everywhere.
 
-If you already denied the permission, go to `chrome://extensions/`, click **Details** on **Bitcoin Search**, and set **Site access** to **On all sites**.
+If you already denied it, go to `chrome://extensions/`, open **Details** for **Bitcoin Search**, and set **Site access** to **On all sites**.
 
-Built-in browser pages such as `chrome://newtab/`, Settings, and Extensions cannot run content scripts, so the shortcut will always open the popup window there. This is a Chrome security limitation.
+Built-in browser pages like `chrome://newtab/`, Settings, and Extensions can't run content scripts at all, so the shortcut will always open the popup window there. That's a Chrome security limitation, not a bug.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) — use it, tweak it, share it.

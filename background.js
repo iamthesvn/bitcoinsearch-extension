@@ -95,6 +95,12 @@ chrome.omnibox.onInputEntered.addListener((text, disposition) => {
 
 // Handle search requests from content scripts / popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'themeChanged') {
+    broadcastThemeChange(request.theme);
+    sendResponse({ ok: true });
+    return false;
+  }
+
   if (request.action !== 'search') {
     return;
   }
@@ -169,6 +175,22 @@ async function ensureContentScriptInjected(tab) {
   }
 
   return { ok: false, error: 'content script did not respond after injection' };
+}
+
+async function broadcastThemeChange(theme) {
+  try {
+    const tabs = await chrome.tabs.query({});
+    for (const tab of tabs) {
+      if (!tab.id) {
+        continue;
+      }
+      chrome.tabs.sendMessage(tab.id, { action: 'themeChanged', theme }).catch(() => {
+        // Ignore tabs without the content script.
+      });
+    }
+  } catch {
+    // Ignore query failures.
+  }
 }
 
 async function openPopupWindow() {

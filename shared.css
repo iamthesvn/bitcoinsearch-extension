@@ -1,0 +1,246 @@
+:root {
+  --bs-bg: #fafafa;
+  --bs-surface: #ffffff;
+  --bs-cream: #f6f0e6;
+  --bs-border: #e5e7eb;
+  --bs-text: #292929;
+  --bs-muted: #636366;
+  --bs-placeholder: #999999;
+  --bs-orange: #f7931a;
+  --bs-orange-dark: #e8782b;
+  --bs-orange-light: #f6a73f;
+  --bs-error: #dc2626;
+  --bs-hover: #fff0e0;
+  --bs-radius: 12px;
+  --bs-font:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
+  --bs-gradient: linear-gradient(92.78deg, #e8782b, #f6a73f 101.1%);
+}
+
+.bs-dark {
+  --bs-bg: #0f1115;
+  --bs-surface: #1a1d23;
+  --bs-cream: #181410;
+  --bs-border: #2c2f36;
+  --bs-text: #f1f1f1;
+  --bs-muted: #9ca3af;
+  --bs-placeholder: #6b7280;
+  --bs-hover: #2a1d12;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--bs-font);
+  background: var(--bs-bg);
+  color: var(--bs-text);
+}
+
+.bs-logo {
+  display: flex;
+  align-items: center;
+}
+
+.bs-logo-icon {
+  flex-shrink: 0;
+}
+
+.bs-dark .bs-logo-icon path {
+  fill: #ffffff;
+}
+
+.bs-logo-text {
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  background: var(--bs-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bs-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--bs-border);
+  border-radius: 8px;
+  color: var(--bs-muted);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.bs-theme-toggle:hover,
+.bs-theme-toggle:focus {
+  background: var(--bs-hover);
+  color: var(--bs-text);
+  border-color: var(--bs-orange);
+  outline: none;
+}
+
+.bs-theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.bs-theme-toggle .bs-icon-sun,
+.bs-dark .bs-theme-toggle .bs-icon-moon {
+  display: none;
+}
+
+.bs-dark .bs-theme-toggle .bs-icon-sun {
+  display: block;
+}
+
+.bs-input {
+  width: 100%;
+  color: var(--bs-text);
+  background: var(--bs-surface);
+  border: 1px solid var(--bs-border);
+  border-radius: var(--bs-radius);
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.bs-input::placeholder {
+  color: var(--bs-placeholder);
+}
+
+.bs-input:focus {
+  border-color: var(--bs-orange);
+  box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.15);
+}
+
+.bs-search-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bs-gradient);
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  cursor: pointer;
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
+}
+
+.bs-search-btn:hover,
+.bs-search-btn:focus {
+  opacity: 0.92;
+}
+
+.bs-search-btn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.bs-results {
+  display: flex;
+  flex-direction: column;
+}
+
+.bs-loading,
+.bs-empty,
+.bs-error {
+  text-align: center;
+  color: var(--bs-muted);
+  font-size: 14px;
+}
+
+.bs-error {
+  color: var(--bs-error);
+}
+
+.bs-result {
+  display: block;
+  text-decoration: none;
+  background: var(--bs-surface);
+  border: 1px solid var(--bs-border);
+  border-radius: var(--bs-radius);
+  transition:
+    border-color 0.12s,
+    background 0.12s,
+    transform 0.08s;
+}
+
+.bs-result:hover,
+.bs-result:focus,
+.bs-result.active {
+  border-color: var(--bs-orange);
+  background: var(--bs-hover);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.bs-result-source {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--bs-muted);
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.bs-result-title {
+  color: var(--bs-text);
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+
+.bs-result-snippet {
+  color: var(--bs-muted);
+  line-height: 1.45;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bs-result-meta {
+  color: var(--bs-orange-dark);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.bs-footer a,
+.bs-window-footer a {
+  color: var(--bs-muted);
+  text-decoration: none;
+}
+
+.bs-footer a:hover,
+.bs-footer a:focus,
+.bs-window-footer a:hover,
+.bs-window-footer a:focus {
+  color: var(--bs-orange-dark);
+  outline: none;
+}
+
+kbd {
+  background: var(--bs-hover);
+  color: var(--bs-text);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 11px;
+}

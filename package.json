@@ -8,7 +8,7 @@
     "format:check": "prettier --check \"**/*.{js,css,html,json,md}\"",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "pack": "zip -r bitcoinsearch-extension.zip . -x 'node_modules/*' 'package*.json' '.prettierrc.json' 'eslint.config.mjs' '.gitignore' '*.zip' '.git/*' '.DS_Store'"
+    "pack": "zip -r bitcoinsearch-extension.zip . -x 'node_modules/*' 'package*.json' '.prettierrc.json' 'eslint.config.mjs' '.gitignore' '*.zip' '.git/*' '.DS_Store' 'assets/*'"
   },
   "repository": {
     "type": "git",

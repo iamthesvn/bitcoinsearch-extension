@@ -9,22 +9,6 @@
 
   const OVERLAY_ID = 'bitcoinsearch-overlay';
 
-  const COLORS = {
-    bg: '#fafafa',
-    surface: '#ffffff',
-    cream: '#f6f0e6',
-    border: '#e5e7eb',
-    text: '#292929',
-    muted: '#636366',
-    placeholder: '#999999',
-    orange: '#f7931a',
-    orangeDark: '#e8782b',
-    orangeLight: '#f6a73f',
-    error: '#dc2626',
-    hover: '#fff0e0',
-    gradient: 'linear-gradient(92.78deg, #e8782b, #f6a73f 101.1%)'
-  };
-
   let overlay = null;
   let shadowRoot = null;
   let previouslyFocusedElement = null;
@@ -50,7 +34,33 @@
     style.textContent = `
       :host {
         all: initial;
+        --bs-bg: #fafafa;
+        --bs-surface: #ffffff;
+        --bs-cream: #f6f0e6;
+        --bs-border: #e5e7eb;
+        --bs-text: #292929;
+        --bs-muted: #636366;
+        --bs-placeholder: #999999;
+        --bs-orange: #f7931a;
+        --bs-orange-dark: #e8782b;
+        --bs-orange-light: #f6a73f;
+        --bs-error: #dc2626;
+        --bs-hover: #fff0e0;
+        --bs-logo-fill: #171923;
+        --bs-radius: 12px;
+        --bs-gradient: linear-gradient(92.78deg, #e8782b, #f6a73f 101.1%);
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+      }
+      :host(.bs-dark) {
+        --bs-bg: #0f1115;
+        --bs-surface: #1a1d23;
+        --bs-cream: #181410;
+        --bs-border: #2c2f36;
+        --bs-text: #f1f1f1;
+        --bs-muted: #9ca3af;
+        --bs-placeholder: #6b7280;
+        --bs-hover: #2a1d12;
+        --bs-logo-fill: #ffffff;
       }
       * {
         box-sizing: border-box;
@@ -69,8 +79,8 @@
         transform: translateX(-50%);
         z-index: 2147483647;
         width: min(680px, 92vw);
-        background: ${COLORS.bg};
-        border: 1px solid ${COLORS.border};
+        background: var(--bs-bg);
+        border: 1px solid var(--bs-border);
         border-radius: 16px;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         overflow: hidden;
@@ -83,8 +93,8 @@
         align-items: center;
         justify-content: space-between;
         padding: 14px 20px;
-        background: ${COLORS.cream};
-        border-bottom: 1px solid ${COLORS.border};
+        background: var(--bs-cream);
+        border-bottom: 1px solid var(--bs-border);
       }
       .bs-logo {
         display: flex;
@@ -99,7 +109,7 @@
         font-weight: 700;
         font-style: italic;
         letter-spacing: -0.02em;
-        background: ${COLORS.gradient};
+        background: var(--bs-gradient);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -107,7 +117,7 @@
       .bs-close {
         background: transparent;
         border: none;
-        color: ${COLORS.muted};
+        color: var(--bs-muted);
         font-size: 26px;
         line-height: 1;
         cursor: pointer;
@@ -117,8 +127,8 @@
       }
       .bs-close:hover,
       .bs-close:focus {
-        background: ${COLORS.hover};
-        color: ${COLORS.text};
+        background: var(--bs-hover);
+        color: var(--bs-text);
         outline: none;
       }
       .bs-search-box {
@@ -126,24 +136,24 @@
         display: flex;
         align-items: center;
         padding: 16px 20px;
-        border-bottom: 1px solid ${COLORS.border};
+        border-bottom: 1px solid var(--bs-border);
       }
       .bs-input {
         width: 100%;
         padding: 14px 50px 14px 18px;
         font-size: 16px;
-        color: ${COLORS.text};
-        background: ${COLORS.surface};
-        border: 1px solid ${COLORS.border};
-        border-radius: 12px;
+        color: var(--bs-text);
+        background: var(--bs-surface);
+        border: 1px solid var(--bs-border);
+        border-radius: var(--bs-radius);
         outline: none;
         transition: border-color 0.15s, box-shadow 0.15s;
       }
       .bs-input::placeholder {
-        color: ${COLORS.placeholder};
+        color: var(--bs-placeholder);
       }
       .bs-input:focus {
-        border-color: ${COLORS.orange};
+        border-color: var(--bs-orange);
         box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.15);
       }
       .bs-search-btn {
@@ -156,7 +166,7 @@
         justify-content: center;
         width: 40px;
         height: 40px;
-        background: ${COLORS.gradient};
+        background: var(--bs-gradient);
         border: none;
         border-radius: 10px;
         color: #ffffff;
@@ -183,26 +193,26 @@
       .bs-error {
         padding: 28px 20px;
         text-align: center;
-        color: ${COLORS.muted};
+        color: var(--bs-muted);
         font-size: 14px;
       }
       .bs-error {
-        color: ${COLORS.error};
+        color: var(--bs-error);
       }
       .bs-result {
         display: block;
         padding: 14px;
         text-decoration: none;
-        background: ${COLORS.surface};
-        border: 1px solid ${COLORS.border};
-        border-radius: 12px;
+        background: var(--bs-surface);
+        border: 1px solid var(--bs-border);
+        border-radius: var(--bs-radius);
         transition: border-color 0.12s, background 0.12s, transform 0.08s;
       }
       .bs-result:hover,
       .bs-result:focus,
       .bs-result.active {
-        border-color: ${COLORS.orange};
-        background: ${COLORS.hover};
+        border-color: var(--bs-orange);
+        background: var(--bs-hover);
         outline: none;
         transform: translateY(-1px);
       }
@@ -210,20 +220,20 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        color: ${COLORS.muted};
+        color: var(--bs-muted);
         font-size: 12px;
         font-weight: 500;
         margin-bottom: 6px;
       }
       .bs-result-title {
-        color: ${COLORS.text};
+        color: var(--bs-text);
         font-size: 15px;
         font-weight: 700;
         line-height: 1.35;
         margin-bottom: 6px;
       }
       .bs-result-snippet {
-        color: ${COLORS.muted};
+        color: var(--bs-muted);
         font-size: 13px;
         line-height: 1.45;
         margin-bottom: 8px;
@@ -233,7 +243,7 @@
         overflow: hidden;
       }
       .bs-result-meta {
-        color: ${COLORS.orangeDark};
+        color: var(--bs-orange-dark);
         font-size: 11px;
         font-weight: 600;
         text-transform: uppercase;
@@ -241,14 +251,14 @@
       }
       .bs-footer {
         padding: 12px 20px;
-        border-top: 1px solid ${COLORS.border};
-        color: ${COLORS.muted};
+        border-top: 1px solid var(--bs-border);
+        color: var(--bs-muted);
         font-size: 12px;
         text-align: center;
       }
       .bs-footer kbd {
-        background: ${COLORS.hover};
-        color: ${COLORS.text};
+        background: var(--bs-hover);
+        color: var(--bs-text);
         padding: 2px 6px;
         border-radius: 4px;
         font-family: inherit;
@@ -276,7 +286,7 @@
       'd',
       'M15.7 10.3c.2-1.4-.9-2.2-2.4-2.7l.5-1.9-1.2-.3-.4 1.8c-.3-.1-.7-.2-1.1-.2l.4-1.8-1.2-.3-.5 1.9c-.3-.1-.6-.2-.8-.3l-.1-.1-1.7-.4-.3 1.2s.9.2.9.2c.5.1.6.5.5.8l-.5 2.2v.1l-.8 3.1c-.1.2-.3.5-.7.4.1.1-.8-.2-.8-.2l-.6 1.4 1.5.4c.3.1.6.2.9.2l-.5 2 1.2.3.5-1.9c.3.1.7.2 1.1.3l-.5 1.9 1.2.3.5-2c2 .5 3.5-.2 4.1-1.6.5-1.2 0-2-.9-2.5.7-.2 1.2-.8 1.4-1.8zm-2.4 3.8c-.4 1.3-2.2.6-2.8.4l.5-2c.6.2 2.6.5 2.3 1.6zm.3-3.8c-.3 1.1-1.8.5-2.3.4l.4-1.8c.5.1 2.2.4 1.9 1.4z'
     );
-    path.setAttribute('fill', '#171923');
+    path.setAttribute('fill', 'var(--bs-logo-fill)');
 
     svg.appendChild(circle);
     svg.appendChild(path);
@@ -305,6 +315,13 @@
     svg.appendChild(circle);
     svg.appendChild(line);
     return svg;
+  }
+
+  function applyOverlayTheme(isDark) {
+    if (!overlay) {
+      return;
+    }
+    overlay.classList.toggle('bs-dark', isDark);
   }
 
   async function createOverlay() {
@@ -405,6 +422,8 @@
     });
 
     bindOverlaySearch(input, results);
+
+    applyOverlayTheme(await BitcoinSearch.isDarkMode());
 
     return overlay;
   }
@@ -539,6 +558,11 @@
     }
     if (request.action === 'toggle') {
       toggleOverlay();
+      sendResponse({ ok: true });
+      return false;
+    }
+    if (request.action === 'themeChanged') {
+      applyOverlayTheme(request.theme === 'dark');
       sendResponse({ ok: true });
       return false;
     }

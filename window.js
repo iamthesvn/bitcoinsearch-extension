@@ -5,10 +5,14 @@
   const results = document.querySelector('.bs-results');
   const closeBtn = document.querySelector('.bs-close');
   const searchBtn = document.querySelector('.bs-search-btn');
+  const themeToggle = document.querySelector('.bs-theme-toggle');
 
   if (!input || !results) {
     return;
   }
+
+  BitcoinSearch.initTheme(document.documentElement);
+  BitcoinSearch.attachThemeToggle(themeToggle, document.documentElement);
 
   function navigateToSearch() {
     const query = input.value.trim();
