@@ -500,6 +500,12 @@
     });
 
     input.addEventListener('keydown', (event) => {
+      // Stop the event from bubbling to the host page. Because the input is
+      // inside a shadow root, the page would otherwise see the event target as
+      // the overlay host and could fire its own keyboard shortcuts (e.g. on
+      // GitHub when pressing Shift), stealing focus from the input.
+      event.stopPropagation();
+
       if (event.key === 'Escape') {
         event.preventDefault();
         hideOverlay();
