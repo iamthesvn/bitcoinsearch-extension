@@ -15,29 +15,28 @@ This extension lets you search [bitcoinsearch.xyz](https://bitcoinsearch.xyz/) w
 - On built-in browser pages like `chrome://newtab/`, the shortcut opens a centered popup window instead of the overlay. Chrome doesn't allow overlays on those pages.
 - Toggle light or dark mode from the popup or popup window. Your preference is saved and applies to the overlay too.
 
-## Get the code
+## Install from source
+
+Works in Chrome, Edge, Brave, or any Chromium browser that supports Manifest V3.
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/iamthesvn/bitcoinsearch-extension.git
+   ```
+2. Open `chrome://extensions/` (or `edge://extensions/`, `brave://extensions/`).
+3. Turn on **Developer mode** in the top-right corner.
+4. Click **Load unpacked**.
+5. Select the `bitcoinsearch-extension` folder.
+6. That's it. No build step or `npm install` is needed just to run the extension.
+
+## Development
+
+If you want to change the code, format it, or build the release zip, you'll need Node.js for the dev tooling.
 
 ```bash
 git clone https://github.com/iamthesvn/bitcoinsearch-extension.git
 cd bitcoinsearch-extension
 npm install
-```
-
-## Install it locally
-
-Works in Chrome, Edge, Brave, or any Chromium browser that supports Manifest V3.
-
-1. Open `chrome://extensions/` (or `edge://extensions/`, `brave://extensions/`).
-2. Turn on **Developer mode** in the top-right corner.
-3. Click **Load unpacked**.
-4. Select the `bitcoinsearch-extension` folder.
-5. That's it.
-
-## Development
-
-The extension has no build step — just HTML, CSS, and JavaScript. Node.js is only used for formatting and linting.
-
-```bash
 npm run format
 npm run format:check
 npm run lint
